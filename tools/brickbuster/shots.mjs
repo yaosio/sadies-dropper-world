@@ -35,11 +35,11 @@ for (const [device, opts] of [['desktop', DEVICES.desktop], ['phone', { ...DEVIC
   await p.waitForTimeout(300);
   if (opts.hasTouch) await p.tap('#clubhouse #use'); else await p.keyboard.press('KeyE');
   await shot('6-playing', 2500);
-  await p.evaluate(() => { const b = window.__brickbuster; b.throwBall(1, 1.5, 0.4, -5); });
-  await p.waitForTimeout(700);
-  await p.evaluate(() => { const b = window.__brickbuster; b.throwBall(3.2, 5, 0.4, 6); });
-  await shot('7-cracked', 500);
-  // knock out most of the bricks (they land on the heap), then break the bottom
+  await p.evaluate(() => window.__brickbuster.loseLife());
+  await shot('7-missed', 1200);
+  await p.evaluate(() => window.__brickbuster.crackTop());
+  await shot('7b-cracked', 500);
+  // knock out most of the bricks (they land on the heap), then break the top
   await p.evaluate(() => window.__brickbuster.knockOut(30));
   await p.keyboard.press('Escape').catch(() => {});
   await p.evaluate(() => window.__clubhouse.put('room:brickbuster', { x: -1.5, z: 1.2, yaw: Math.PI - 0.3, pitch: -0.15, y: 0 }));
@@ -48,8 +48,9 @@ for (const [device, opts] of [['desktop', DEVICES.desktop], ['phone', { ...DEVIC
   await p.waitForTimeout(300);
   if (opts.hasTouch) await p.tap('#clubhouse #use'); else await p.keyboard.press('KeyE');
   await p.waitForTimeout(1500);
-  for (let i = 0; i < 6 && !(await p.evaluate(() => window.__brickbuster.state().broken)); i++) {
-    await p.evaluate(() => { const b = window.__brickbuster, s = b.state(); b.throwBall(s.paddle < 2.1 ? 3.6 : 0.6, 1.4, 0, -5); });
+  await p.evaluate(() => window.__brickbuster.holdRepair(true));   // (it stays broken for the pictures; mended at the end)
+  for (let i = 0; i < 8 && !(await p.evaluate(() => window.__brickbuster.state().broken)); i++) {
+    await p.evaluate(() => window.__brickbuster.crackTop());
     await p.waitForTimeout(500);
   }
   await shot('9-shatter', 150);
@@ -79,6 +80,12 @@ for (const [device, opts] of [['desktop', DEVICES.desktop], ['phone', { ...DEVIC
   });
   for (const [name, wait] of [['17-hall-yarn-ball', 2500], ['18-hall-later', 9000], ['19-hall-later-still', 9000]]) {
     await p.waitForTimeout(wait); await lookAtBall(); await shot(name, 150);
+  }
+  // and now the machine mends itself
+  await p.evaluate(() => { const m = window.__clubhouse; window.__brickbuster.holdRepair(false); m.put('room:brickbuster', { x: -1.2, z: 1.0, yaw: Math.PI + 0.25, pitch: -0.05, y: 0 }); });
+  for (const [name, wait, until] of [['20-mending-paddle', 0, s => s.fixing && !s.mended], ['21-mending-glass', 600, s => s.glassBack], ['22-mending-heap', 2200, s => s.glassBack], ['23-mended', 1000, s => !s.fixing && s.canPlay]]) {
+    await p.waitForFunction(`(${until})(window.__brickbuster.state())`, null, { timeout: 60000 }).catch(() => {});
+    await shot(name, wait || 900);
   }
   console.log(JSON.stringify(await p.evaluate(() => window.__brickbuster.state())));
   await ctx.close();

@@ -14,8 +14,11 @@ smoothing), a file per kind of sound:
 - `glass.js`: the three cracks (a snap, a thump, crackle bursts, glass pings, a slapback echo, the
   third a long crash); the shatter (a snap and a boom, a crash in two waves, three seconds of glass
   tinkling down); and the tink of glass that can't crack any more.
-- `machine.js`: the paddle's BOING, brick blips (higher rows higher), and the case's tock, bricks
-  landing on the heap too.
+- `machine.js`: the paddle's BOING, brick blips (higher rows higher), the case's tock (bricks landing
+  on the heap too), and the little tunes of a miss (a sad slide down), a new level (a quick bright
+  run up) and GAME OVER (four notes drooping down).
+- `repair.js`: the machine mending itself: the new ball's bubbly pop, and a soft run of glass chimes
+  climbing a scale as the glass comes back together (nothing like the shatter).
 - `quiet.js`: the poster's squeak-click, `mute`.
 - `sadie.js`: Sadie's sounds while she plays in the hall, and `makeChatter`, the rules for when she
   makes them.
@@ -37,6 +40,12 @@ you're in the hall).
   chords every other round, a new hook and now and then a key change up every fourth. `heat` (0 to
   1: the most cracks on one side, over two) sets the speed (132 to 150 beats a minute, `BPM`),
   brings in the arpeggio (from 0.3) and the hopping bass.
+- `repair.js` writes the tune the machine mends itself to (no browser: the tests run it) and plays
+  it: about 15 seconds of a whimsical little waltz in a bright major key (6/8): a music-box tune
+  (a soft square wave, with sine sparkles on top) over two long bass notes a bar (so never an even
+  row of notes: nothing ticks or drones), climbing to a busier middle while the bricks dance, and
+  ending on a happy chord with a tinkle. Written fresh from a seed, so never the same twice. It plays
+  while it mends (through its own band, so the theme makes way for it) and fades out after.
 - `player.js` plays it live on the browser's own oscillators (`SHAPES`: soft edges, short notes),
   with a short slapback echo, through the toolbox's band (`src/shared/band.js`, a music line on
   the sound system), so the theme makes way for it and the MUSIC button sets its volume without

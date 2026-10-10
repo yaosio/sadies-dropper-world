@@ -591,7 +591,7 @@ export async function open(cards, enter) {
     $('#arcadeHint').hidden = !inGame;
     $('#stick').hidden = !touchy || inGame || !!me.world.watch;   // (no walking while you're made to watch something)
     if (inGame) $('#keysHint').hidden = true;
-    if (inGame) btn.textContent = 'STEP BACK';
+    if (inGame) btn.textContent = game.holdToLeave() ? 'HOLD TO LEAVE' : 'STEP BACK';
     else if (target) {
       hint.querySelector('span').textContent = target.label; btn.textContent = target.act ? target.button || 'USE' : 'PLAY';
       // a use can show what it is, little: `swatch` (a colour, any css background) and `icon` (a picture)
@@ -600,7 +600,12 @@ export async function open(cards, enter) {
       g.clearRect(0, 0, 16, 16); if (target.icon) g.drawImage(target.icon, 0, 0, 16, 16);
     }
   }
-  on($('#use'), 'click', () => { if (mode === 'arcade') game.stepBack(); else if (target && mode === 'play') use(target); });
+  // (a game with `holdToLeave`: STEP BACK on a phone only works held for a moment, not on a quick tap)
+  let holding = null;
+  const letGo = () => { clearTimeout(holding); holding = null; };
+  on($('#use'), 'pointerdown', () => { if (mode === 'arcade' && game.holdToLeave()) { letGo(); holding = setTimeout(() => { holding = null; if (mode === 'arcade') game.stepBack(); }, 600); } });
+  for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) on($('#use'), ev, letGo);
+  on($('#use'), 'click', () => { if (mode === 'arcade') { if (!game.holdToLeave()) game.stepBack(); } else if (target && mode === 'play') use(target); });
   // Sit down at the computer: you lean in until the screen fills the view, then the program starts.
   let going = null;
   function use(u) {

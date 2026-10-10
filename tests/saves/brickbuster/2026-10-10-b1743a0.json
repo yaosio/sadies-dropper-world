@@ -1,0 +1,5 @@
+{
+ "sadies-clubhouse.brickbuster.sadie": "\"out\"",
+ "sadies-clubhouse.brickbuster.game": "{\"v\":2,\"seed\":694443,\"level\":1,\"lives\":3,\"score\":80,\"lifeMark\":0,\"high\":80,\"rng\":1449750013,\"topReady\":true,\"topHits\":0,\"bricks\":\"0001000000100000001000010000000111111110000011011110110001111111111110010111111110100101000000101000001100110000\",\"paddle\":0.65,\"serving\":true,\"ball\":{\"x\":0.65,\"y\":1.09,\"vx\":0,\"vy\":0,\"spin\":6.1031},\"pile\":\"\",\"pileNext\":0,\"cracks\":{\"top\":[],\"bottom\":[]},\"broken\":null,\"mended\":true}",
+ "mansion.invited": "true"
+}

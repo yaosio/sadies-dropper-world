@@ -1,11 +1,12 @@
 // Brickbuster '96's sounds: every sound it makes, by name, and how loud. The sounds themselves are
-// made in their own files (the glass, the machine, the poster, Sadie), with the kit in retro.js;
+// made in their own files (the glass, the machine, the machine mending itself, the poster, Sadie), with the kit in retro.js;
 // the clubhouse's sound system (src/shared/sound.js) plays them, through the room's handle. A new
 // sound goes in the file it belongs with (or a new file), and gets a line here.
 import { RATE } from '../../../shared/retro.js';
 import { wrap } from '../../../shared/sound.js';
 import { crack, shatter, tink } from './glass.js';
-import { boing, blip, tock } from './machine.js';
+import { boing, blip, tock, miss, level, over, oneup } from './machine.js';
+import { pop, mend } from './repair.js';
 import { mute } from './quiet.js';
 import * as sadie from './sadie.js';
 
@@ -21,6 +22,12 @@ export function makeSounds(h) {
     tink: () => play('tink', tink, 0.7),
     shatter: () => play('shatter', shatter),
     mute: () => play('mute', mute, 0.9),
+    miss: () => play('miss', miss, 0.8),
+    level: () => play('level', level, 0.8),
+    over: () => play('over', over, 0.8),
+    oneup: () => play('oneup', oneup, 0.85),
+    pop: () => play('pop', pop, 0.8),
+    mend: () => play('mend', mend, 0.7),
     // Sadie (a sound makeChatter picked), `at` where she is: a voice, fading with distance
     sadie({ name, variant }, at) { play(`sadie-${name}${variant}`, () => sadie[name](variant), sadie.LOUD[name], { bus: 'voices', at }); },
   });
